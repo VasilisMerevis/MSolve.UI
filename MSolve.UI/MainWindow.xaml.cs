@@ -152,7 +152,7 @@ namespace MSolve.UI
             Console.WriteLine(mesh.Positions.Count + " points");
             Console.WriteLine(mesh.TriangleIndices.Count / 3 + " triangles");
 
-            // Make the surface's material using a solid orange brush.
+            // Make the surface's material using a solid orange brush..
             DiffuseMaterial surface_material = new DiffuseMaterial(Brushes.BlueViolet);
 
             // Make the mesh's model.
