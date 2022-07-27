@@ -29,6 +29,7 @@
             <Image Grid.Row="0" Name="gnuplotImage"  Margin="20,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             <Button Grid.Row="1" Content="Import OBJ File" Margin="0,20,0,0" VerticalAlignment="Center" Height="40" Click="ImportOBJFile" HorizontalAlignment="Left" Width="140"/>
             <Button Grid.Row="1" Content="Display OBJ object" Margin="150,20,0,0" VerticalAlignment="Center" Click="Button_Plot_OBJ" Height="40" HorizontalAlignment="Left" Width="140"/>
+            <Button Grid.Row="2" Content="Run" Margin="150,20,0,0" VerticalAlignment="Center" Click="Button_Run" Height="40" HorizontalAlignment="Left" Width="140"/>
             <TextBox Grid.Row="5" x:Name="LogTool" x:FieldModifier="public" Margin="0,0,0,0" Width="450" TextWrapping="Wrap" Height="200" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             <Label Grid.Row="3" Content="Convergence Results" Margin="0,0,0,0" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Width="375"/>
             <lvc:CartesianChart Grid.Row="4" AnimationsSpeed="0:0:0.5" Hoverable="False" DataTooltip="{x:Null}" Margin="0,0,0,0" MinHeight="250" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="450">

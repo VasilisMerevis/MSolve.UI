@@ -32,6 +32,7 @@ namespace MSolve.UI
         private PerspectiveCamera TheCamera;
         public event PropertyChangedEventHandler PropertyChanged;
         private Model3DGroup MainModel3Dgroup = new Model3DGroup();
+        
         public ChartValues<ConvergenceValues> ChartValues { get; set; }
         public double AxisStep { get; set; }
         public double AxisUnit { get; set; }
@@ -270,6 +271,31 @@ namespace MSolve.UI
             ViewportGraphics.InvalidateVisual();
 
             ViewportGraphics.Children.Add(plotMesh.GetModel());
+        }
+
+        private void Button_Run(object sender, RoutedEventArgs e)
+        {
+            Task task1 = new Task(() => Test());
+            task1.Start();
+            //task1.Wait();
+            
+            
+        }
+
+        private void Test()
+        {
+            RandomChartValues values = new RandomChartValues(100, 10, 1e-4);
+            values.IterationCompleted += WriteValuesOnLogTool;
+            values.RunRandomConvergenceValuesGenerator();
+        }
+
+        public void WriteValuesOnLogTool(object sender, ConvergenceValues e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                LogTool.Text = "Load Step " + e.LoadStep + "-Iteration " + e.Iteration + " : Convergence State: " + e.ConvergenceResult + " with residual " + e.ResidualNorm;
+            }));
+            //LogTool.Text = e.ConvergenceResult.ToString();
         }
 
         private void ImportOBJFile(object sender, RoutedEventArgs e)

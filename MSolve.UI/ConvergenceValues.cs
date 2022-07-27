@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MSolve.UI
 {
-    public class ConvergenceValues
+    public class ConvergenceValues : EventArgs
     {
         public double ResidualNorm { get; set; }
         public double Tolerance { get; set; }
