@@ -27,9 +27,17 @@
                 <RowDefinition Height="200"/>
             </Grid.RowDefinitions>
             <Image Grid.Row="0" Name="gnuplotImage"  Margin="20,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-            <Button Grid.Row="1" Content="Import OBJ File" Margin="0,20,0,0" VerticalAlignment="Center" Height="40" Click="ImportOBJFile" HorizontalAlignment="Left" Width="140"/>
-            <Button Grid.Row="1" Content="Display OBJ object" Margin="150,20,0,0" VerticalAlignment="Center" Click="Button_Plot_OBJ" Height="40" HorizontalAlignment="Left" Width="140"/>
-            <Button Grid.Row="2" Content="Run" Margin="150,20,0,0" VerticalAlignment="Center" Click="Button_Run" Height="40" HorizontalAlignment="Left" Width="140"/>
+            <Grid Grid.Row="1" Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Import OBJ File" Margin="0,0,0,0" Height="40" VerticalAlignment="Center" Click="ImportOBJFile" HorizontalAlignment="Left"/>
+                <Button Grid.Column="1" Content="Display OBJ object" Margin="0,0,0,0" Height="40" VerticalAlignment="Center" Click="Button_Plot_OBJ" HorizontalAlignment="Left"/>
+                <Button Grid.Column="2" Content="Run simulation" Margin="0,0,0,0" Height="40" VerticalAlignment="Center"  HorizontalAlignment="Left" Click="Button_Run_Simulation"/>
+            </Grid>
+            
             <TextBox Grid.Row="5" x:Name="LogTool" x:FieldModifier="public" Margin="0,0,0,0" Width="450" TextWrapping="Wrap" Height="200" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             <Label Grid.Row="3" Content="Convergence Results" Margin="0,0,0,0" Height="30" VerticalAlignment="Center" HorizontalAlignment="Left" Width="375"/>
             <lvc:CartesianChart Grid.Row="4" AnimationsSpeed="0:0:0.5" Hoverable="False" DataTooltip="{x:Null}" Margin="0,0,0,0" MinHeight="250" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="450">
@@ -51,13 +59,13 @@
                         </lvc:Axis.Separator>
                     </lvc:Axis>
                 </lvc:CartesianChart.AxisX>
-                <lvc:CartesianChart.AxisY>
-                    <lvc:Axis MaxValue="1000" MinValue="-10" Unit="1000" >
+                <!--<lvc:CartesianChart.AxisY>
+                    <lvc:Axis MaxValue="100" MinValue="1" Unit="10" >
                         <lvc:Axis.Sections>
                             <lvc:AxisSection Value="0" StrokeThickness="3" Stroke="#303030"></lvc:AxisSection>
                         </lvc:Axis.Sections>
                     </lvc:Axis>
-                </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart.AxisY>-->
             </lvc:CartesianChart>
         </Grid>
 

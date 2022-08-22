@@ -50,14 +50,18 @@ namespace MSolve.UI
 
         // The change in CameraR when you press + or -.
         private const double CameraDR = 0.1 * 100 * 10;
+        private double _axisMax;
+        private double _axisMin;
+
         public MainWindow()
         {
             InitializeComponent();
-            InitializeComponent();
+            
             ConvergenceResults();
             Window_Loaded();
-            gnuplotImage.Source = new BitmapImage(new Uri(@"C:\Users\Vasilis\source\repos\MSolve.UI\MSolve.UI\bin\Debug\mgroup.png"));
+            //gnuplotImage.Source = new BitmapImage(new Uri(@"C:\Users\Vasilis\source\repos\MSolve.UI\MSolve.UI\bin\Debug\mgroup.png"));
             //this.KeyDown += Window_KeyDown;
+            //DataContext = this;
         }
 
         private void Window_Loaded()
@@ -102,6 +106,7 @@ namespace MSolve.UI
             //AxisUnit forces lets the axis know that we are plotting seconds
             //this is not always necessary, but it can prevent wrong labeling
             AxisUnit = 100;// TimeSpan.TicksPerSecond;
+            //DataContext = this;
         }
 
         private void DefineLights()
@@ -273,10 +278,11 @@ namespace MSolve.UI
             ViewportGraphics.Children.Add(plotMesh.GetModel());
         }
 
-        private void Button_Run(object sender, RoutedEventArgs e)
+        private void Button_Run_Simulation(object sender, RoutedEventArgs e)
         {
             Task task1 = new Task(() => Test());
             task1.Start();
+            DataContext = this;
             //task1.Wait();
             
             
@@ -294,8 +300,48 @@ namespace MSolve.UI
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
                 LogTool.Text = "Load Step " + e.LoadStep + "-Iteration " + e.Iteration + " : Convergence State: " + e.ConvergenceResult + " with residual " + e.ResidualNorm;
+                ChartValues.Add(
+                    new ConvergenceValues()
+                    {
+                        Iteration = e.Iteration,
+                        ResidualNorm = e.ResidualNorm,
+                    });
             }));
+            SetAxisLimits(e.Iteration+1);
+
+            if (ChartValues.Count > 50) ChartValues.RemoveAt(0);
             //LogTool.Text = e.ConvergenceResult.ToString();
+        }
+
+        private void SetAxisLimits(int now)
+        {
+            AxisMax = 10;
+            AxisMin = 1;
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public double AxisMax
+        {
+            get { return _axisMax; }
+            set
+            {
+                _axisMax = value;
+                OnPropertyChanged("AxisMax");
+            }
+        }
+        public double AxisMin
+        {
+            get { return _axisMin; }
+            set
+            {
+                _axisMin = value;
+                OnPropertyChanged("AxisMin");
+            }
         }
 
         private void ImportOBJFile(object sender, RoutedEventArgs e)
@@ -346,5 +392,7 @@ namespace MSolve.UI
                 throw ex;
             }
         }
+
+        
     }
 }
