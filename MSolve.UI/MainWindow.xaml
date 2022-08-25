@@ -19,15 +19,23 @@
         </Grid.RowDefinitions>
         <Grid Grid.Column="0" Name="FirstColumnInner" Margin="20,20,20,40">
             <Grid.RowDefinitions>
-                <RowDefinition Height="70"/>
+                <RowDefinition Height="120"/>
                 <RowDefinition Height="60"/>
                 <RowDefinition />
                 <RowDefinition Height="35"/>
                 <RowDefinition Height="300"/>
                 <RowDefinition Height="200"/>
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Source="MGroupLogo.png" Name="gnuplotImage"  Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-            <Grid Grid.Row="1" Margin="0,0,0,0">
+            <Grid Name="ImageGrid" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <Image Grid.Row="1" Source="MGroupLogo.png" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <Image Grid.Row="0" Source="MSolveLogo.png" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            </Grid>
+            
+            <Grid Grid.Row="1" Margin="0,20,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -53,7 +61,8 @@
                     LineSmoothness="1"
                     StrokeThickness="3" 
                     Stroke="#F34336"
-                    Fill="Black"/>
+                    Fill="Pink"/>
+                            
                         </lvc:CartesianChart.Series>
                         <lvc:CartesianChart.AxisX>
                             <lvc:Axis LabelFormatter="{Binding DateTimeFormatter}" 
@@ -65,13 +74,7 @@
                                 </lvc:Axis.Separator>
                             </lvc:Axis>
                         </lvc:CartesianChart.AxisX>
-                        <!--<lvc:CartesianChart.AxisY>
-                    <lvc:Axis MaxValue="100" MinValue="1" Unit="10" >
-                        <lvc:Axis.Sections>
-                            <lvc:AxisSection Value="0" StrokeThickness="3" Stroke="#303030"></lvc:AxisSection>
-                        </lvc:Axis.Sections>
-                    </lvc:Axis>
-                </lvc:CartesianChart.AxisY>-->
+                        
                     </lvc:CartesianChart>
                 </Border>
             </Grid>

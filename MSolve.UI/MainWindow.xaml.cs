@@ -315,8 +315,8 @@ namespace MSolve.UI
 
         private void SetAxisLimits(int now)
         {
-            AxisMax = 10;
-            AxisMin = 1;
+            AxisMax = now+2;
+            AxisMin = now-10;
         }
 
         protected virtual void OnPropertyChanged(string propertyName = null)
