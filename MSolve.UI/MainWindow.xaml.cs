@@ -300,6 +300,10 @@ namespace MSolve.UI
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
                 LogTool.Text = "Load Step " + e.LoadStep + "-Iteration " + e.Iteration + " : Convergence State: " + e.ConvergenceResult + " with residual " + e.ResidualNorm;
+                if (e.Iteration==0)
+                {
+                    ChartValues.Clear();
+                }
                 ChartValues.Add(
                     new ConvergenceValues()
                     {

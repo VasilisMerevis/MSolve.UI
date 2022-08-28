@@ -34,10 +34,7 @@ namespace MSolve.UI
                     Random randomNumber = new Random();
                     double norm = randomNumber.NextDouble() * (virtualUpperLimit - virtualLowerLimit) + virtualLowerLimit;
                     bool convergenceResult = false;
-                    if (norm < Tolerance)
-                    {
-                        convergenceResult = true;
-                    }
+                   
                     TestConvergenceValues.Add(new ConvergenceValues()
                     {
                         LoadStep = i,
@@ -46,8 +43,14 @@ namespace MSolve.UI
                         Tolerance = this.Tolerance,
                         ConvergenceResult = convergenceResult
                     });
+                    
                     System.Threading.Thread.Sleep(500);
                     OnIterationCompleted(TestConvergenceValues.Last());
+                    if (norm < Tolerance)
+                    {
+                        convergenceResult = true;
+                        break;
+                    }
                 }
             }
         }
