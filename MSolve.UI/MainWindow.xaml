@@ -8,7 +8,7 @@
         mc:Ignorable="d"
 
 
-        Title="MSolve" Height="572" Width="959">
+        Title="MSolve" MinHeight="720" MinWidth="1360">
     <Grid Name="gridBasic">
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="500" MaxWidth="550"/>                
@@ -37,7 +37,7 @@
                 <Image Grid.Row="0" Source="MSolveLogo.png" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
             </Grid>
             
-            <Grid Grid.Row="1" Margin="0,20,0,0">
+            <Grid Grid.Row="1" Margin="0,20,0,0" Height="40">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -45,9 +45,22 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Content="Import OBJ File" Margin="0,0,5,0" VerticalAlignment="Stretch" Click="ImportOBJFile" HorizontalAlignment="Stretch"/>
-                <Button Grid.Column="1" Content="Display OBJ object" Margin="5,0,5,0" VerticalAlignment="Stretch" Click="Button_Plot_OBJ" HorizontalAlignment="Stretch"/>
-                <Button Grid.Column="2" Content="Import Ansys model" Margin="5,0,5,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Click="Button_Run_Simulation"/>
-                <Button Grid.Column="3" Content="Run simulation" Margin="5,0,0,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Click="Button_Run_Simulation"/>
+                <Button Grid.Column="1" Content="Display OBJ Model" Margin="5,0,5,0" VerticalAlignment="Stretch" Click="Button_Plot_OBJ" HorizontalAlignment="Stretch"/>
+                <Button Grid.Column="2" Content="Import Ansys Model" Margin="5,0,5,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Click="Button_Run_Simulation"/>
+                <Button Grid.Column="3" Content="Run Simulation" Margin="5,0,0,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Click="Button_Run_Simulation"/>
+            </Grid>
+
+            <Grid Grid.Row="2" Margin="0,0,0,0" Height="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Plot Results" Margin="0,0,5,0" VerticalAlignment="Stretch" Click="PlotResultsClick" HorizontalAlignment="Stretch"/>
+                <Button Grid.Column="1" Content="Export Plot" Margin="5,0,5,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch"/>
+                <Button Grid.Column="2" Content="Export Results" Margin="5,0,5,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" />
+                <Button Grid.Column="3" Content="Clear Data" Margin="5,0,0,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" />
             </Grid>
             <Grid Grid.Row="7" Margin="0,10,0,30">
                 <TextBox  BorderThickness="1" BorderBrush="Black" x:Name="LogTool" x:FieldModifier="public" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
@@ -55,14 +68,15 @@
 
             <Label Grid.Row="3" Content="Analysis Results" Margin="0,0,0,0" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="375"/>
 
-            <Grid Grid.Row="4" Margin="0,0,0,0">
-                <Border BorderThickness="1" BorderBrush="Black">
-                    <lvc:CartesianChart Series="{Binding SeriesCollection}" LegendLocation="Right" >
+            <Grid Grid.Row="4" Margin="0,0,0,0" Height="350" VerticalAlignment="Bottom">
+                <Border BorderThickness="1" BorderBrush="Black" VerticalAlignment="Stretch">
+                    <lvc:CartesianChart Name="DispChart"  LegendLocation="Right" >
+                        
                         <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Title="Sales" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                            <lvc:Axis Title="Force" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
                         </lvc:CartesianChart.AxisY>
                         <lvc:CartesianChart.AxisX>
-                            <lvc:Axis Title="Month" Labels="{Binding Labels}"></lvc:Axis>
+                            <lvc:Axis Title="Displacement" Labels="{Binding Labels}"></lvc:Axis>
                         </lvc:CartesianChart.AxisX>
                     </lvc:CartesianChart>
                 </Border>
