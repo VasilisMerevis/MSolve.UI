@@ -37,6 +37,7 @@ namespace MSolve.UI
         public ChartValues<ConvergenceValues> ChartValues { get; set; }
         public double AxisStep { get; set; }
         public double AxisUnit { get; set; }
+        int kTemp;
 
         // The camera's current location.
         private double CameraPhi = 0; //Math.PI / 6.0;       // 30 degrees
@@ -297,22 +298,24 @@ namespace MSolve.UI
         }
 
         public void WriteValuesOnLogTool(object sender, ConvergenceValues e)
-        {
+        { 
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                LogTool.Text = "Load Step " + e.LoadStep + "-Iteration " + e.Iteration + " : Convergence State: " + e.ConvergenceResult + " with residual " + e.ResidualNorm;
+                LogTool.Text = "Load Step " + e.LoadStep + "-Iteration " + e.Iteration + " : Convergence State: " + e.ConvergenceResult + " with residual " + e.ResidualNorm +" kTemp  "+ kTemp;
                 if (e.Iteration==0)
                 {
-                    ChartValues.Clear();
+                    //ChartValues.Clear();
                 }
                 ChartValues.Add(
                     new ConvergenceValues()
                     {
-                        Iteration = e.Iteration,
+                        Iteration = kTemp,//e.Iteration,
                         ResidualNorm = e.ResidualNorm,
                     });
             }));
-            SetAxisLimits(e.Iteration+1);
+            SetAxisLimits(kTemp + 1);
+            kTemp = kTemp + 1;
+            //SetAxisLimits(e.Iteration+1);
 
             if (ChartValues.Count > 50) ChartValues.RemoveAt(0);
             //LogTool.Text = e.ConvergenceResult.ToString();
