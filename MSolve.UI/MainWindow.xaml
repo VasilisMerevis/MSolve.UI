@@ -46,7 +46,7 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Content="Import OBJ File" Margin="0,0,5,0" VerticalAlignment="Stretch" Click="ImportOBJFile" HorizontalAlignment="Stretch"/>
                 <Button Grid.Column="1" Content="Display OBJ Model" Margin="5,0,5,0" VerticalAlignment="Stretch" Click="Button_Plot_OBJ" HorizontalAlignment="Stretch"/>
-                <Button Grid.Column="2" Content="Import Ansys Model" Margin="5,0,5,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Click="Button_Run_Simulation"/>
+                <Button Grid.Column="2" Content="Import GFEC Results" Margin="5,0,5,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Click="Import_GFEC_Results"/>
                 <Button Grid.Column="3" Content="Run Simulation" Margin="5,0,0,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Click="Button_Run_Simulation"/>
             </Grid>
 

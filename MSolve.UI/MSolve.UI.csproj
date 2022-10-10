@@ -63,6 +63,7 @@
     </ApplicationDefinition>
     <Compile Include="DFChart.cs" />
     <Compile Include="DFChartValues.cs" />
+    <Compile Include="GFECMesh.cs" />
     <Compile Include="RandomChartValues.cs" />
     <Compile Include="RunningChart.cs" />
     <Page Include="MainWindow.xaml">

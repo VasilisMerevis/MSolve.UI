@@ -433,6 +433,12 @@ namespace MSolve.UI
             DispChart.Series = SeriesCollection;
         }
 
+        private void Import_GFEC_Results(object sender, RoutedEventArgs e)
+        {
+            var mesh = new GFECMesh();
+            mesh.ReadData();
+        }
+
 
     }
 }
