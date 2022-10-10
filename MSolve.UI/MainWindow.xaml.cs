@@ -33,6 +33,7 @@ namespace MSolve.UI
         private PerspectiveCamera TheCamera;
         public event PropertyChangedEventHandler PropertyChanged;
         private Model3DGroup MainModel3Dgroup = new Model3DGroup();
+        private GFECMesh mesh;
         
         public ChartValues<ConvergenceValues> ChartValues { get; set; }
         public double AxisStep { get; set; }
@@ -435,8 +436,13 @@ namespace MSolve.UI
 
         private void Import_GFEC_Results(object sender, RoutedEventArgs e)
         {
-            var mesh = new GFECMesh();
+            mesh = new GFECMesh();
             mesh.ReadData();
+        }
+
+        private void ExportParaviewModel(object sender, RoutedEventArgs e)
+        {
+            mesh.ExportParaviewXML("C:/Users/Public/Documents/paraviewData.xml");
         }
 
 

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MSolve.UI
 {
@@ -65,6 +66,89 @@ namespace MSolve.UI
                     { 8, elementNodes[7] }
                 };
             }         
+        }
+
+        public void ExportParaviewXML(string pathToSave)
+        {
+            XElement messageBody = CreateXMLMessageBody();
+            XDocument document = CreateCompleteXML(messageBody);
+            document.Save(pathToSave);
+        }
+
+        private XDocument CreateCompleteXML(XElement unstructuredGrid)
+        {
+            XDocument document = new XDocument(
+                new XDeclaration("1.0", "UTF-8", "yes"),
+                new XElement("VTKFile", unstructuredGrid));
+            return document;
+        }
+
+        private XElement CreateXMLMessageBody()
+        {
+            XElement pointsDataArray = new XElement(
+                "DataArray",
+                new XAttribute("type", "Float32"),
+                new XAttribute("NumberOfComponents", 3),
+                new XAttribute("format", "ascii")
+                );
+
+            XElement[] cells = new XElement[]
+            {
+                new XElement(
+                    "DataArray",
+                    new XAttribute("type", "Float32"),
+                    new XAttribute("name", "connectivity"),
+                    new XAttribute("format", "ascii")
+                ),
+                new XElement(
+                    "DataArray",
+                    new XAttribute("type", "Float32"),
+                    new XAttribute("name", "offsets"),
+                    new XAttribute("format", "ascii")
+                ),
+                new XElement(
+                    "DataArray",
+                    new XAttribute("type", "Float8"),
+                    new XAttribute("name", "types"),
+                    new XAttribute("format", "ascii")
+                ),
+            };
+
+
+            XElement piece = new XElement(
+                "Piece",
+                new XAttribute("NumberOfPoint", 8),
+                new XAttribute("NumberOfCells", 2),
+                new XElement("CellData", null),
+                new XElement("PointData", null),
+                new XElement("Points", pointsDataArray),
+                new XElement("Cells", cells)
+                                );
+            //XElement[] manufacturer = new XElement[]
+            //    {
+            //        new XElement ("Name", CompanyName),
+            //        new XElement ("Street1", CompanyAddress),
+            //        new XElement ("City", City),
+            //        new XElement ("PostCode", PostalCode),
+            //        new XElement ("CountryCode", CountryCode)
+            //    };
+
+            //List<XElement> serials = CreateSerialsElement(SerialNumbers);
+
+            //XElement[] packCreateManufacturerRequest = new XElement[]
+            //{
+            //    new XElement ("CreationDate", Date),
+            //    new XElement ("CodeScheme", CodeScheme),
+            //    new XElement ("CodeValue", CodeValue),
+            //    new XElement ("BatchId", BatchID),
+            //    new XElement ("BatchExpiry", ExpirationDate),
+            //    new XElement ("Manufacturer", manufacturer),
+            //    new XElement ("SerialIds", serials)
+            //};
+
+            //XElement arrayOfPackCreateManufacturerRequest = new XElement("PackCreateManufacturerRequest", packCreateManufacturerRequest);
+            //return arrayOfPackCreateManufacturerRequest;
+            return piece;
         }
     }
 }
