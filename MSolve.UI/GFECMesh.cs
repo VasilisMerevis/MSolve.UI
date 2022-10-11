@@ -12,8 +12,9 @@ namespace MSolve.UI
 {
     public class GFECMesh
     {
-        public Dictionary<int, IGraphicalNode> nodes = new Dictionary<int, IGraphicalNode>();
+        public Dictionary<int, IGraphicalNode> initialNodes = new Dictionary<int, IGraphicalNode>();
         public Dictionary<int, Dictionary<int, int>> elementsConnectivity = new Dictionary<int, Dictionary<int, int>>();
+        public Dictionary<int, IGraphicalNode> nodalDisplacements = new Dictionary<int, IGraphicalNode>();
 
         public GFECMesh()
         {
@@ -27,8 +28,10 @@ namespace MSolve.UI
             string selectedFilePath = dialog1.FileName;
             string coordinateFilePath = "C:/Users/Public/Documents/coordinateData.dat";
             string conectivityFilePath = "C:/Users/Public/Documents/connectivityData.dat";
+            string dynamicResults1 = "C:/Users/Public/Documents/DynamicSol1.dat";
             List<string> allLines = new List<string>(File.ReadAllLines(coordinateFilePath));
             List<string> allLines2 = new List<string>(File.ReadAllLines(conectivityFilePath));
+            List<string> allLines3 = new List<string>(File.ReadAllLines(dynamicResults1));
 
             foreach (var line in allLines)
             {
@@ -36,8 +39,8 @@ namespace MSolve.UI
                 string[] fields = line.Split(separator.ToCharArray());
 
                 int nodeID = int.Parse(fields[0]);
-                var node = new GraphicalNode(double.Parse(fields[1], CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[2], CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[3], CultureInfo.GetCultureInfo("en-US")));
-                nodes.Add(nodeID, node);                
+                var node = new GraphicalNode(double.Parse(fields[1], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[2], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[3], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")));
+                initialNodes.Add(nodeID, node);                
             }
 
             foreach (var line in allLines2)
@@ -64,14 +67,40 @@ namespace MSolve.UI
                     { 7, elementNodes[6] },
                     { 8, elementNodes[7] }
                 };
-            }         
+            }
+
+            int k = 1;
+            for (int i = 0; i <= allLines3.Count-3; i+=3)
+            {
+                //double kati = Double.Parse(allLines3[i], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture);
+                var singleNodeDisplacement = new GraphicalNode(Double.Parse(allLines3[i], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture), Double.Parse(allLines3[i+1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture), Double.Parse(allLines3[i+2], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture));
+                nodalDisplacements.Add(k, singleNodeDisplacement);
+                k = k + 1;
+
+            }
+            
         }
 
+        
+        private void UpdateNodalPositions(Dictionary<int, IGraphicalNode> nodes)
+        {
+            for (int i = 1; i <= nodes.Count; i++)
+            {
+                nodalDisplacements[i].XCoordinate = nodalDisplacements[i].XCoordinate + nodes[i].XCoordinate;
+                nodalDisplacements[i].YCoordinate = nodalDisplacements[i].YCoordinate + nodes[i].YCoordinate;
+                nodalDisplacements[i].ZCoordinate = nodalDisplacements[i].ZCoordinate + nodes[i].ZCoordinate;
+            }
+        }
         public void ExportParaviewXML(string pathToSave)
         {
-            XElement messageBody = CreateXMLMessageBody();
+            XElement messageBody = CreateXMLMessageBody(initialNodes);
             XDocument document = CreateCompleteXML(messageBody);
             document.Save(pathToSave);
+
+            UpdateNodalPositions(initialNodes);
+            XElement messageBodyStep1 = CreateXMLMessageBody(nodalDisplacements);
+            XDocument documentStep1 = CreateCompleteXML(messageBodyStep1);
+            documentStep1.Save("C:/Users/Public/Documents/paraviewDataStep1.vtu");
         }
 
         private XDocument CreateCompleteXML(XElement unstructuredGrid)
@@ -88,7 +117,7 @@ namespace MSolve.UI
             return document;
         }
 
-        private XElement CreateXMLMessageBody()
+        private XElement CreateXMLMessageBody(Dictionary<int, IGraphicalNode> nodes)
         {
             List<string> stringOfNodes = new List<string>();
             foreach (var node in nodes)
