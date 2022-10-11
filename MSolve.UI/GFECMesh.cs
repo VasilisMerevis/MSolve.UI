@@ -36,7 +36,7 @@ namespace MSolve.UI
                 string[] fields = line.Split(separator.ToCharArray());
 
                 int nodeID = int.Parse(fields[0]);
-                var node = new GraphicalNode(double.Parse(fields[1], CultureInfo.InvariantCulture), double.Parse(fields[2], CultureInfo.InvariantCulture), double.Parse(fields[3], CultureInfo.InvariantCulture));
+                var node = new GraphicalNode(double.Parse(fields[1], CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[2], CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[3], CultureInfo.GetCultureInfo("en-US")));
                 nodes.Add(nodeID, node);                
             }
 
@@ -50,9 +50,8 @@ namespace MSolve.UI
 
                 for (int i = 1; i < fields.Length; i++)
                 {
-                    elementNodes.Add(int.Parse(fields[i]));
+                    elementNodes.Add(int.Parse(fields[i])-1);
                 }
-
 
                 elementsConnectivity[elementID] = new Dictionary<int, int>()
                 {
@@ -79,48 +78,101 @@ namespace MSolve.UI
         {
             XDocument document = new XDocument(
                 new XDeclaration("1.0", "UTF-8", "yes"),
-                new XElement("VTKFile", unstructuredGrid));
+                new XElement(
+                    "VTKFile",
+                    new XAttribute("type", "UnstructuredGrid"),
+                    new XAttribute("version", "0.1"),
+                    new XAttribute("byte_order", "LittleEndian"),
+                    new XAttribute("compressor", "vtkZLibDataCompressor"),
+                    new XElement("UnstructuredGrid", unstructuredGrid)));
             return document;
         }
 
         private XElement CreateXMLMessageBody()
         {
+            List<string> stringOfNodes = new List<string>();
+            foreach (var node in nodes)
+            {
+                stringOfNodes.Add(node.Value.XCoordinate.ToString(new CultureInfo("en-US")) + " " + node.Value.YCoordinate.ToString(new CultureInfo("en-US")) + " " + node.Value.ZCoordinate.ToString(new CultureInfo("en-US")) + "\n");
+            }
+
+            List<string> testString = new List<string>();
+            for (int i = 0; i < 8; i++)
+            {
+                testString.Add(stringOfNodes[i]);
+            }
+
+            
             XElement pointsDataArray = new XElement(
                 "DataArray",
                 new XAttribute("type", "Float32"),
                 new XAttribute("NumberOfComponents", 3),
-                new XAttribute("format", "ascii")
+                new XAttribute("format", "ascii"),
+                stringOfNodes
                 );
+
+            List<string> connectivity = new List<string>();
+            foreach (var element in elementsConnectivity)
+            {
+                connectivity.Add(
+                    element.Value[1].ToString() + " " +
+                    element.Value[2].ToString() + " " +
+                    element.Value[3].ToString() + " " +
+                    element.Value[4].ToString() + " " +
+                    element.Value[5].ToString() + " " +
+                    element.Value[6].ToString() + " " +
+                    element.Value[7].ToString() + " " +
+                    element.Value[8].ToString() + " " +
+                    "\n");
+            }
+
+            int k = 0;
+            List<string> offsets = new List<string>();
+            for (int i = 0; i < connectivity.Count; i++)
+            {
+                k = k + 8;
+                offsets.Add(k.ToString()+"\n");
+            }
+
+            k = 12;
+            List<string> types = new List<string>();
+            for (int i = 0; i < connectivity.Count; i++)
+            {
+                types.Add(k.ToString()+"\n");
+            }
 
             XElement[] cells = new XElement[]
             {
                 new XElement(
                     "DataArray",
-                    new XAttribute("type", "Float32"),
-                    new XAttribute("name", "connectivity"),
-                    new XAttribute("format", "ascii")
+                    new XAttribute("type", "Int32"),
+                    new XAttribute("Name", "connectivity"),
+                    new XAttribute("format", "ascii"),
+                    connectivity
                 ),
                 new XElement(
                     "DataArray",
-                    new XAttribute("type", "Float32"),
-                    new XAttribute("name", "offsets"),
-                    new XAttribute("format", "ascii")
+                    new XAttribute("type", "Int32"),
+                    new XAttribute("Name", "offsets"),
+                    new XAttribute("format", "ascii"),
+                    offsets
                 ),
                 new XElement(
                     "DataArray",
-                    new XAttribute("type", "Float8"),
-                    new XAttribute("name", "types"),
-                    new XAttribute("format", "ascii")
+                    new XAttribute("type", "UInt8"),
+                    new XAttribute("Name", "types"),
+                    new XAttribute("format", "ascii"),
+                    types
                 ),
             };
 
 
             XElement piece = new XElement(
                 "Piece",
-                new XAttribute("NumberOfPoint", 8),
-                new XAttribute("NumberOfCells", 2),
-                new XElement("CellData", null),
-                new XElement("PointData", null),
+                new XAttribute("NumberOfPoints", nodes.Count),
+                new XAttribute("NumberOfCells", elementsConnectivity.Count),
+                new XElement("CellData"),
+                new XElement("PointData"),
                 new XElement("Points", pointsDataArray),
                 new XElement("Cells", cells)
                                 );
