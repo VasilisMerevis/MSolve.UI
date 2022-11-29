@@ -14,36 +14,55 @@ namespace MSolve.UI
     {
         public Dictionary<int, IGraphicalNode> initialNodes = new Dictionary<int, IGraphicalNode>();
         public Dictionary<int, Dictionary<int, int>> elementsConnectivity = new Dictionary<int, Dictionary<int, int>>();
-        public Dictionary<int, IGraphicalNode> nodalDisplacements = new Dictionary<int, IGraphicalNode>();
+        //public Dictionary<int, IGraphicalNode> nodalDisplacements = new Dictionary<int, IGraphicalNode>();
+        private string gfecFileName;
+        private int gfecTotalFiles;
+        private string pathExport;
+        private string filenameExport;
+        List<Dictionary<int, IGraphicalNode>> allTimeStepsDisp = new List<Dictionary<int, IGraphicalNode>>();
 
         public GFECMesh()
         {
-
+            gfecFileName = "paraviewDataStep3";
+            gfecTotalFiles = 60;
+            pathExport = "C:/Users/Public/Documents/TEST/";
+            filenameExport = "paraviewDataStep";
         }
 
         public void ReadData()
         {
-            OpenFileDialog dialog1 = new OpenFileDialog();
-            dialog1.ShowDialog();
-            string selectedFilePath = dialog1.FileName;
-            string coordinateFilePath = "C:/Users/Public/Documents/coordinateData.dat";
-            string conectivityFilePath = "C:/Users/Public/Documents/connectivityData.dat";
-            string dynamicResults1 = "C:/Users/Public/Documents/DynamicSol1.dat";
-            List<string> allLines = new List<string>(File.ReadAllLines(coordinateFilePath));
-            List<string> allLines2 = new List<string>(File.ReadAllLines(conectivityFilePath));
-            List<string> allLines3 = new List<string>(File.ReadAllLines(dynamicResults1));
+            //OpenFileDialog dialog1 = new OpenFileDialog();
+            //dialog1.ShowDialog();
+            //string selectedFilePath = dialog1.FileName;
 
-            foreach (var line in allLines)
+            ReadCoordinateData();
+            ReadConnectivityData();
+            for (int i = 0; i < gfecTotalFiles; i++)
+            {
+                allTimeStepsDisp.Add(ReadDynamicResults(i));
+            }
+        }
+
+        private void ReadCoordinateData()
+        {
+            string coordinateFilePath = "C:/Users/Public/Documents/Initial/MSolve_Results_Regale/coordinateData.dat";
+            List<string> alllinesCoordinates = new List<string>(File.ReadAllLines(coordinateFilePath));
+            foreach (var line in alllinesCoordinates)
             {
                 string separator = "\t";
                 string[] fields = line.Split(separator.ToCharArray());
 
                 int nodeID = int.Parse(fields[0]);
                 var node = new GraphicalNode(double.Parse(fields[1], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[2], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[3], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")));
-                initialNodes.Add(nodeID, node);                
+                initialNodes.Add(nodeID, node);
             }
+        }
 
-            foreach (var line in allLines2)
+        private void ReadConnectivityData()
+        {
+            string conectivityFilePath = "C:/Users/Public/Documents/Initial/MSolve_Results_Regale/connectivityData.dat";
+            List<string> alllinesConnectivity = new List<string>(File.ReadAllLines(conectivityFilePath));
+            foreach (var line in alllinesConnectivity)
             {
                 string separator = "\t";
                 string[] fields = line.Split(separator.ToCharArray());
@@ -53,7 +72,7 @@ namespace MSolve.UI
 
                 for (int i = 1; i < fields.Length; i++)
                 {
-                    elementNodes.Add(int.Parse(fields[i])-1);
+                    elementNodes.Add(int.Parse(fields[i]) - 1);
                 }
 
                 elementsConnectivity[elementID] = new Dictionary<int, int>()
@@ -68,39 +87,51 @@ namespace MSolve.UI
                     { 8, elementNodes[7] }
                 };
             }
+        }
 
+        private Dictionary<int, IGraphicalNode> ReadDynamicResults(int timestep)
+        {
+            Dictionary<int, IGraphicalNode> nodalDisplacements = new Dictionary<int, IGraphicalNode>();
+            string dynamicResults1 = "C:/Users/Public/Documents/Initial/MSolve_Results_Regale/Regale Full Solution Vectors/RegaleSolution"+timestep.ToString()+".txt";
+            List<string> alllinesDynamicResults = new List<string>(File.ReadAllLines(dynamicResults1));
             int k = 1;
-            for (int i = 0; i <= allLines3.Count-3; i+=3)
+            for (int i = 0; i <= alllinesDynamicResults.Count - 3; i += 3)
             {
                 //double kati = Double.Parse(allLines3[i], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture);
-                var singleNodeDisplacement = new GraphicalNode(Double.Parse(allLines3[i], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture), Double.Parse(allLines3[i+1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture), Double.Parse(allLines3[i+2], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture));
+                var singleNodeDisplacement = new GraphicalNode(Double.Parse(alllinesDynamicResults[i], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture), Double.Parse(alllinesDynamicResults[i + 1], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture), Double.Parse(alllinesDynamicResults[i + 2], System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture));
                 nodalDisplacements.Add(k, singleNodeDisplacement);
                 k = k + 1;
 
             }
-            
+            return nodalDisplacements;
         }
 
         
-        private void UpdateNodalPositions(Dictionary<int, IGraphicalNode> nodes)
+        private void UpdateNodalPositions(Dictionary<int, IGraphicalNode> nodes, int timestep)
         {
+            //Dictionary<int, IGraphicalNode> nodalDisplacements = allTimeStepsDisp[timestep];
             for (int i = 1; i <= nodes.Count; i++)
             {
-                nodalDisplacements[i].XCoordinate = nodalDisplacements[i].XCoordinate + nodes[i].XCoordinate;
-                nodalDisplacements[i].YCoordinate = nodalDisplacements[i].YCoordinate + nodes[i].YCoordinate;
-                nodalDisplacements[i].ZCoordinate = nodalDisplacements[i].ZCoordinate + nodes[i].ZCoordinate;
+                allTimeStepsDisp[timestep][i].XCoordinate = allTimeStepsDisp[timestep][i].XCoordinate + nodes[i].XCoordinate;
+                allTimeStepsDisp[timestep][i].YCoordinate = allTimeStepsDisp[timestep][i].YCoordinate + nodes[i].YCoordinate;
+                allTimeStepsDisp[timestep][i].ZCoordinate = allTimeStepsDisp[timestep][i].ZCoordinate + nodes[i].ZCoordinate;
             }
         }
         public void ExportParaviewXML(string pathToSave)
         {
             XElement messageBody = CreateXMLMessageBody(initialNodes);
             XDocument document = CreateCompleteXML(messageBody);
-            document.Save(pathToSave);
+            document.Save(pathExport + filenameExport+"-1");
 
-            UpdateNodalPositions(initialNodes);
-            XElement messageBodyStep1 = CreateXMLMessageBody(nodalDisplacements);
-            XDocument documentStep1 = CreateCompleteXML(messageBodyStep1);
-            documentStep1.Save("C:/Users/Public/Documents/paraviewDataStep1.vtu");
+            for (int i = 0; i < gfecTotalFiles; i++)
+            {
+                UpdateNodalPositions(initialNodes, i);
+                XElement messageBodyStep = CreateXMLMessageBody(allTimeStepsDisp[i]);
+                XDocument documentStep = CreateCompleteXML(messageBodyStep);
+                documentStep.Save("C:/Users/Public/Documents/TEST/"+filenameExport+i.ToString()+".vtu");
+            }
+            
+            CreatePVDFile();
         }
 
         private XDocument CreateCompleteXML(XElement unstructuredGrid)
@@ -205,31 +236,37 @@ namespace MSolve.UI
                 new XElement("Points", pointsDataArray),
                 new XElement("Cells", cells)
                                 );
-            //XElement[] manufacturer = new XElement[]
-            //    {
-            //        new XElement ("Name", CompanyName),
-            //        new XElement ("Street1", CompanyAddress),
-            //        new XElement ("City", City),
-            //        new XElement ("PostCode", PostalCode),
-            //        new XElement ("CountryCode", CountryCode)
-            //    };
-
-            //List<XElement> serials = CreateSerialsElement(SerialNumbers);
-
-            //XElement[] packCreateManufacturerRequest = new XElement[]
-            //{
-            //    new XElement ("CreationDate", Date),
-            //    new XElement ("CodeScheme", CodeScheme),
-            //    new XElement ("CodeValue", CodeValue),
-            //    new XElement ("BatchId", BatchID),
-            //    new XElement ("BatchExpiry", ExpirationDate),
-            //    new XElement ("Manufacturer", manufacturer),
-            //    new XElement ("SerialIds", serials)
-            //};
-
-            //XElement arrayOfPackCreateManufacturerRequest = new XElement("PackCreateManufacturerRequest", packCreateManufacturerRequest);
-            //return arrayOfPackCreateManufacturerRequest;
+            
             return piece;
+        }
+
+        private void CreatePVDFile()
+        {
+            List<XElement> timesteps = new List<XElement>();
+            for (int i = 0; i < gfecTotalFiles; i++)
+            {
+                timesteps.Add(
+                    new XElement(
+                        "DataSet",
+                        new XAttribute("timestep", i.ToString()),
+                        new XAttribute("group", ""),
+                        new XAttribute("part", ""),
+                        new XAttribute("file", filenameExport + i.ToString() + ".vtu")
+                    )
+                    );
+            }
+
+            XDocument pvdFile = new XDocument(
+                new XDeclaration("1.0","",""),
+                new XElement("VTKFile",
+                new XAttribute("type", "Collection"),
+                new XAttribute("version", "0.1"),
+                new XAttribute("byte_order", "LittleEndian"),
+                new XAttribute("compressor", "vtkZLibDataCompressor"),
+                new XElement("Collection", timesteps)
+                ));
+
+            pvdFile.Save("C:/Users/Public/Documents/TEST/timeBasedUnstructured.pvd");
         }
     }
 }

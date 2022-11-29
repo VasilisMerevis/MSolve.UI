@@ -442,7 +442,7 @@ namespace MSolve.UI
 
         private void ExportParaviewModel(object sender, RoutedEventArgs e)
         {
-            mesh.ExportParaviewXML("C:/Users/Public/Documents/paraviewData.vtu");
+            mesh.ExportParaviewXML("C:/Users/Public/Documents/TEST/paraviewData.vtu");
             LogTool.Text = "Operation completed!";
         }
 
