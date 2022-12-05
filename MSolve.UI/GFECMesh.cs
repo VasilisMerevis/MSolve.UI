@@ -20,6 +20,8 @@ namespace MSolve.UI
         private string pathExport;
         private string filenameExport;
         List<Dictionary<int, IGraphicalNode>> allTimeStepsDisp = new List<Dictionary<int, IGraphicalNode>>();
+        public double ScaleFactor { get; set; }
+        List<string> nodalDisplacements;
 
         public GFECMesh()
         {
@@ -27,6 +29,8 @@ namespace MSolve.UI
             gfecTotalFiles = 60;
             pathExport = "C:/Users/Public/Documents/TEST/";
             filenameExport = "paraviewDataStep";
+            ScaleFactor = 0.0;
+            nodalDisplacements = new List<string>();
         }
 
         public void ReadData()
@@ -115,6 +119,18 @@ namespace MSolve.UI
                 allTimeStepsDisp[timestep][i].XCoordinate = allTimeStepsDisp[timestep][i].XCoordinate + nodes[i].XCoordinate;
                 allTimeStepsDisp[timestep][i].YCoordinate = allTimeStepsDisp[timestep][i].YCoordinate + nodes[i].YCoordinate;
                 allTimeStepsDisp[timestep][i].ZCoordinate = allTimeStepsDisp[timestep][i].ZCoordinate + nodes[i].ZCoordinate;
+
+                nodalDisplacements.Add(allTimeStepsDisp[timestep][i].XCoordinate.ToString(new CultureInfo("en-US")) + " " + allTimeStepsDisp[timestep][i].YCoordinate.ToString(new CultureInfo("en-US")) + " " + allTimeStepsDisp[timestep][i].ZCoordinate.ToString(new CultureInfo("en-US")) + "\n");
+            }
+        }
+        private void UpdateNodalPositions(Dictionary<int, IGraphicalNode> nodes, int timestep, double scaleFactor)
+        {
+            //Dictionary<int, IGraphicalNode> nodalDisplacements = allTimeStepsDisp[timestep];
+            for (int i = 1; i <= nodes.Count; i++)
+            {
+                allTimeStepsDisp[timestep][i].XCoordinate = scaleFactor * allTimeStepsDisp[timestep][i].XCoordinate + nodes[i].XCoordinate;
+                allTimeStepsDisp[timestep][i].YCoordinate = scaleFactor * allTimeStepsDisp[timestep][i].YCoordinate + nodes[i].YCoordinate;
+                allTimeStepsDisp[timestep][i].ZCoordinate = scaleFactor * allTimeStepsDisp[timestep][i].ZCoordinate + nodes[i].ZCoordinate;
             }
         }
         public void ExportParaviewXML(string pathToSave)
@@ -125,10 +141,19 @@ namespace MSolve.UI
 
             for (int i = 0; i < gfecTotalFiles; i++)
             {
-                UpdateNodalPositions(initialNodes, i);
+                if (ScaleFactor != 0)
+                {
+                    UpdateNodalPositions(initialNodes, i, ScaleFactor);
+                }
+                else
+                {
+                    UpdateNodalPositions(initialNodes, i);
+                }
+                
                 XElement messageBodyStep = CreateXMLMessageBody(allTimeStepsDisp[i]);
                 XDocument documentStep = CreateCompleteXML(messageBodyStep);
                 documentStep.Save("C:/Users/Public/Documents/TEST/"+filenameExport+i.ToString()+".vtu");
+                nodalDisplacements.Clear();
             }
             
             CreatePVDFile();
@@ -226,13 +251,21 @@ namespace MSolve.UI
                 ),
             };
 
+            
+
 
             XElement piece = new XElement(
                 "Piece",
                 new XAttribute("NumberOfPoints", nodes.Count),
                 new XAttribute("NumberOfCells", elementsConnectivity.Count),
                 new XElement("CellData"),
-                new XElement("PointData"),
+                new XElement("PointData",
+                    new XElement("DataArray",
+                        new XAttribute("type","Float32"),
+                        new XAttribute("NumberOfComponents","3"),
+                        new XAttribute("Name", "Displacements"),
+                        new XAttribute("format", "ascii"),
+                        nodalDisplacements)),
                 new XElement("Points", pointsDataArray),
                 new XElement("Cells", cells)
                                 );
