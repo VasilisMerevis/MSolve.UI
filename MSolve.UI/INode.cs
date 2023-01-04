@@ -7,6 +7,7 @@ namespace MSolve.UI
 {
     public interface IGraphicalNode
     {
+        int GlobalIndex { get; set; }
         double XCoordinate { get; set; }
         double YCoordinate { get; set; }
         double ZCoordinate { get; set; }

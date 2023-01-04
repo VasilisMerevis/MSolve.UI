@@ -64,8 +64,14 @@
     <Compile Include="DFChart.cs" />
     <Compile Include="DFChartValues.cs" />
     <Compile Include="GFECMesh.cs" />
+    <Compile Include="GraphicalEdgeLinear.cs" />
+    <Compile Include="IGraphicalEdge.cs" />
+    <Compile Include="IGraphicalElement.cs" />
+    <Compile Include="Mesh.cs" />
+    <Compile Include="QuadElement.cs" />
     <Compile Include="RandomChartValues.cs" />
     <Compile Include="RunningChart.cs" />
+    <Compile Include="TriangleElement.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
