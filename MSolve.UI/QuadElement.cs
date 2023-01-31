@@ -6,18 +6,26 @@ using System.Threading.Tasks;
 
 namespace MSolve.UI
 {
-    public class QuadElement
+    public class QuadElement :IGraphicalElement
     {
-        public IGraphicalNode Node1 { get; set; }
-        public IGraphicalNode Node2 { get; set; }
-        public IGraphicalNode Node4 { get; set; }
-        public IGraphicalNode Node3 { get; set; }
+        public IGraphicalNode[] Nodes { get; set; }
+        public int NumberOfNodes { get; }
+        //public IGraphicalNode Node2 { get; set; }
+        //public IGraphicalNode Node4 { get; set; }
+        //public IGraphicalNode Node3 { get; set; }
         public QuadElement(IGraphicalNode node1, IGraphicalNode node2, IGraphicalNode node3, IGraphicalNode node4)
         {
-            Node1 = node1;
-            Node2 = node2;
-            Node3 = node3;
-            Node4 = node4;
+            Nodes[0] = node1;
+            Nodes[1] = node2;
+            Nodes[2] = node3;
+            Nodes[3] = node4;
+
+            NumberOfNodes = 4;
+        }
+
+        public IGraphicalNode CalculateElementCentroid()
+        {
+            throw new NotImplementedException();
         }
     }
 }

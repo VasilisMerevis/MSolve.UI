@@ -12,14 +12,45 @@ namespace MSolve.UI
     {
         IGraphicalNode[] Nodes { get; set; }
         IGraphicalElement[] Elements { get; set; }
-        public static TriangleElement[] SplitQuadInTriangles(QuadElement quadElement)
+        Dictionary<int, List<int>> NodesOwnerElements { get; set; }
+
+        //public static TriangleElement[] SplitQuadInTriangles(QuadElement quadElement)
+        //{
+        //    var triangleElements = new TriangleElement[2];
+        //    var triangleElement1 = new TriangleElement(quadElement.Node1, quadElement.Node2, quadElement.Node4);
+        //    var triangleElement2 = new TriangleElement(quadElement.Node3, quadElement.Node2, quadElement.Node4);
+        //    triangleElements[0] = triangleElement1;
+        //    triangleElements[1] = triangleElement2;
+        //    return triangleElements;
+        //}
+
+        public void FindOwnerElements()
         {
-            var triangleElements = new TriangleElement[2];
-            var triangleElement1 = new TriangleElement(quadElement.Node1, quadElement.Node2, quadElement.Node4);
-            var triangleElement2 = new TriangleElement(quadElement.Node3, quadElement.Node2, quadElement.Node4);
-            triangleElements[0] = triangleElement1;
-            triangleElements[1] = triangleElement2;
-            return triangleElements;
+            for (int i = 0; i < Nodes.Length; i++)
+            {
+                List<int> elementListThatShareNode = new List<int>();
+                int nodeIndex = Nodes[i].GlobalIndex;
+                for (int j = 0; j < Elements.Length; j++)
+                {
+                    for (int k = 0; k < Elements[j].Nodes.Length; k++)
+                    {
+                        if (Elements[j].Nodes[k].GlobalIndex == nodeIndex)
+                        {
+                            elementListThatShareNode.Add(Elements[j].Nodes[k].GlobalIndex);
+                        }
+                    }
+                    
+                    
+                    
+                }
+                NodesOwnerElements.Add(nodeIndex, elementListThatShareNode);
+            }
+        }
+
+        public Mesh CreateNewOffsetMesh(double distance)
+        {
+            Mesh offsetMesh = new Mesh();
+
         }
 
         //public static QuadElement[] SplitTriangleInQuads(TriangleElement triangleElement)

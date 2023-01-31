@@ -55,9 +55,50 @@ namespace MSolve.UI
             };
         }
 
-        public static CalculateLinearQuadNormalUnitVector()
+        public static double[] CreateNewUnitVectorFromVector(double[] vector)
         {
+            double vectorNorm = VectorNorm2(vector);
+            double[] unitVector = new double[vector.Length];
 
+            for (int i = 0; i < vector.Length; i++)
+			{
+                unitVector[i] = vector[i]/vectorNorm;
+			}
+            return unitVector;
+        }
+
+        public static double[] CalculateLinearQuadNormalUnitVector(QuadElement element)
+        {
+            double[] edgeVector1 = CreateVectorFromPoints(
+                element.Nodes[0].XCoordinate,
+                element.Nodes[0].YCoordinate,
+                element.Nodes[1].XCoordinate,
+                element.Nodes[1].YCoordinate);
+
+            double[] edgeVector2 = CreateVectorFromPoints(
+                element.Nodes[0].XCoordinate,
+                element.Nodes[0].YCoordinate,
+                element.Nodes[3].XCoordinate,
+                element.Nodes[3].YCoordinate);
+
+            double[] normalVector = VectorCrossProduct(edgeVector1,edgeVector2);
+            double[] normalUnitVector = CreateNewUnitVectorFromVector(normalVector);
+            return normalUnitVector;
+        }
+
+        public static double[] GetSumOfVectors(List<double[]> vectors)
+        {
+            int lengthOfEachVector = vectors[1].Length;
+            double[] sumVector = new double[lengthOfEachVector];
+
+            foreach (double[] vector in vectors)
+            {
+                for (int i = 0; i < lengthOfEachVector; i++)
+                {
+                    sumVector[i] = sumVector[i] + vector[i];
+                }
+            }
+            return sumVector;
         }
     }
 }

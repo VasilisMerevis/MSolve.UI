@@ -8,6 +8,8 @@ namespace MSolve.UI
 {
     public interface IGraphicalElement
     {
+        int NumberOfNodes { get; }
+        IGraphicalNode[] Nodes { get; set; }
         IGraphicalNode CalculateElementCentroid();
     }
 }
