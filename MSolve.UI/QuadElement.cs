@@ -10,6 +10,9 @@ namespace MSolve.UI
     {
         public IGraphicalNode[] Nodes { get; set; }
         public int NumberOfNodes { get; }
+
+        public double[] UnitNormalVector { get; set; }
+
         //public IGraphicalNode Node2 { get; set; }
         //public IGraphicalNode Node4 { get; set; }
         //public IGraphicalNode Node3 { get; set; }
@@ -23,9 +26,16 @@ namespace MSolve.UI
             NumberOfNodes = 4;
         }
 
+        
         public IGraphicalNode CalculateElementCentroid()
         {
             throw new NotImplementedException();
+        }
+
+        public void GetNormalVector()
+        {
+            double[] normalVector = MathVector.CalculateLinearQuadNormalUnitVector(Nodes);
+            UnitNormalVector = MathVector.CreateNewUnitVectorFromVector(normalVector);
         }
     }
 }

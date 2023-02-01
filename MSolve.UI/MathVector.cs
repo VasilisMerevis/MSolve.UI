@@ -67,19 +67,19 @@ namespace MSolve.UI
             return unitVector;
         }
 
-        public static double[] CalculateLinearQuadNormalUnitVector(QuadElement element)
+        public static double[] CalculateLinearQuadNormalUnitVector(IGraphicalNode[] nodes)
         {
             double[] edgeVector1 = CreateVectorFromPoints(
-                element.Nodes[0].XCoordinate,
-                element.Nodes[0].YCoordinate,
-                element.Nodes[1].XCoordinate,
-                element.Nodes[1].YCoordinate);
+                nodes[0].XCoordinate,
+                nodes[0].YCoordinate,
+                nodes[1].XCoordinate,
+                nodes[1].YCoordinate);
 
             double[] edgeVector2 = CreateVectorFromPoints(
-                element.Nodes[0].XCoordinate,
-                element.Nodes[0].YCoordinate,
-                element.Nodes[3].XCoordinate,
-                element.Nodes[3].YCoordinate);
+                nodes[0].XCoordinate,
+                nodes[0].YCoordinate,
+                nodes[3].XCoordinate,
+                nodes[3].YCoordinate);
 
             double[] normalVector = VectorCrossProduct(edgeVector1,edgeVector2);
             double[] normalUnitVector = CreateNewUnitVectorFromVector(normalVector);
