@@ -121,7 +121,6 @@ namespace MSolve.UI
                     {
                         finalOffsetVectors[i],
                         initialPosistionVectors[i]
-
                     }));
             }
 
