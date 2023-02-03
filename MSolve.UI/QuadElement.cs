@@ -18,6 +18,7 @@ namespace MSolve.UI
         //public IGraphicalNode Node3 { get; set; }
         public QuadElement(IGraphicalNode node1, IGraphicalNode node2, IGraphicalNode node3, IGraphicalNode node4)
         {
+            Nodes = new IGraphicalNode[4];
             Nodes[0] = node1;
             Nodes[1] = node2;
             Nodes[2] = node3;

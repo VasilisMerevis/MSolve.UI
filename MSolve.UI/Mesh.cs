@@ -12,8 +12,8 @@ namespace MSolve.UI
     public class Mesh
     {
         public IGraphicalNode[] Nodes { get; set; }
-        IGraphicalElement[] Elements { get; set; }
-        Dictionary<int, List<int>> NodesOwnerElements { get; set; }
+        public IGraphicalElement[] Elements { get; set; }
+        List<List<int>> NodesOwnerElements { get; set; }
         List<double[]> OffsetVectors { get; set; }
 
         //public static TriangleElement[] SplitQuadInTriangles(QuadElement quadElement)
@@ -25,7 +25,11 @@ namespace MSolve.UI
         //    triangleElements[1] = triangleElement2;
         //    return triangleElements;
         //}
-
+        public Mesh()
+        {
+            NodesOwnerElements = new List<List<int>>();
+            OffsetVectors = new List<double[]>();
+        }
         public void FindOwnerElements()
         {
             for (int i = 0; i < Nodes.Length; i++)
@@ -42,7 +46,7 @@ namespace MSolve.UI
                         }
                     }
                 }
-                NodesOwnerElements.Add(nodeIndex, elementListThatShareNode);
+                NodesOwnerElements.Add(elementListThatShareNode);
             }
         }
 
@@ -94,10 +98,11 @@ namespace MSolve.UI
                 Elements[i].GetNormalVector();
             }
 
-            List<double[]> unitNormalVectors = new List<double[]>();
+            
             IGraphicalNode[] offsetNodes = new IGraphicalNode[Nodes.Length];
             for (int i = 0; i < Nodes.Length; i++)
             {
+                List<double[]> unitNormalVectors = new List<double[]>();
                 foreach (var item in NodesOwnerElements[i])
                 {
                     unitNormalVectors.Add(Elements[item].UnitNormalVector);

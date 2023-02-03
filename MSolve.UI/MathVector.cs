@@ -46,12 +46,13 @@ namespace MSolve.UI
             return resultVector;
         }
 
-        public static double[] CreateVectorFromPoints(double point1X, double point1Y, double point2X, double point2Y)
+        public static double[] CreateVectorFromPoints(double point1X, double point1Y, double point1Z, double point2X, double point2Y, double point2Z)
         {
             return new double[] 
             { 
                 point2X - point1X,
-                point2Y - point1Y
+                point2Y - point1Y,
+                point2Z - point1Z
             };
         }
 
@@ -72,14 +73,18 @@ namespace MSolve.UI
             double[] edgeVector1 = CreateVectorFromPoints(
                 nodes[0].XCoordinate,
                 nodes[0].YCoordinate,
+                nodes[0].ZCoordinate,
                 nodes[1].XCoordinate,
-                nodes[1].YCoordinate);
+                nodes[1].YCoordinate,
+                nodes[1].ZCoordinate);
 
             double[] edgeVector2 = CreateVectorFromPoints(
                 nodes[0].XCoordinate,
                 nodes[0].YCoordinate,
+                nodes[0].ZCoordinate,
                 nodes[3].XCoordinate,
-                nodes[3].YCoordinate);
+                nodes[3].YCoordinate,
+                nodes[3].ZCoordinate);
 
             double[] normalVector = VectorCrossProduct(edgeVector1,edgeVector2);
             double[] normalUnitVector = CreateNewUnitVectorFromVector(normalVector);

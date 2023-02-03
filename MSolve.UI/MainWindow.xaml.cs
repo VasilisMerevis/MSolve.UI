@@ -448,7 +448,24 @@ namespace MSolve.UI
 
         private void ExportMeshToCSV(object sender, RoutedEventArgs e)
         {
-            
+            IGraphicalNode[] nodes = new IGraphicalNode[4];
+            IGraphicalNode node1 = new GraphicalNode(0.0, 0.0, 0.0);
+            IGraphicalNode node2= new GraphicalNode(1.0, 0.0, 0.0);
+            IGraphicalNode node3 = new GraphicalNode(1.0, 1.0, 0.0);
+            IGraphicalNode node4 = new GraphicalNode(0.0, 1.0, 0.0);
+
+            nodes[0] = node1;
+            nodes[1] = node2;
+            nodes[2] = node3;
+            nodes[3] = node3;
+
+            IGraphicalElement[] elements = new IGraphicalElement[1];
+            elements[0] = new QuadElement(node1, node2, node3, node4);
+
+            Mesh newMesh = new Mesh();
+            newMesh.Nodes = nodes;
+            newMesh.Elements = elements;
+            Mesh offsetMesh = newMesh.CreateNewOffsetMesh(1.0);
         }
 
     }
