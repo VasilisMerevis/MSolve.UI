@@ -42,7 +42,7 @@ namespace MSolve.UI
                     {
                         if (Elements[j].Nodes[k].GlobalIndex == nodeIndex)
                         {
-                            elementListThatShareNode.Add(k);
+                            elementListThatShareNode.Add(j);
                         }
                     }
                 }
@@ -80,11 +80,14 @@ namespace MSolve.UI
         private IGraphicalNode[] GetNodesFromPosistionVectors(List<double[]> positionVectors)
         {
             IGraphicalNode[] nodes = new IGraphicalNode[positionVectors.Count];
-            for (int i = 0; i < nodes.Length; i++)
+
+            for (int i = 0; i < positionVectors.Count; i++)
             {
-                nodes[i].XCoordinate = positionVectors[i][0];
-                nodes[i].YCoordinate = positionVectors[i][1];
-                nodes[i].ZCoordinate = positionVectors[i][2];
+                GraphicalNode node = new GraphicalNode(positionVectors[i][0], positionVectors[i][1], positionVectors[i][2]);
+                //nodes[i].XCoordinate = positionVectors[i][0];
+                //nodes[i].YCoordinate = positionVectors[i][1];
+                //nodes[i].ZCoordinate = positionVectors[i][2];
+                nodes[i] = node;
             }
             return nodes;
         }
