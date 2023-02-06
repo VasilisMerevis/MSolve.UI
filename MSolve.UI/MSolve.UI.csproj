@@ -69,6 +69,7 @@
     <Compile Include="IGraphicalElement.cs" />
     <Compile Include="MathVector.cs" />
     <Compile Include="Mesh.cs" />
+    <Compile Include="ParaviewModel.cs" />
     <Compile Include="QuadElement.cs" />
     <Compile Include="RandomChartValues.cs" />
     <Compile Include="RunningChart.cs" />

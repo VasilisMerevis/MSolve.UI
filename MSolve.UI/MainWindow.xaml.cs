@@ -457,7 +457,7 @@ namespace MSolve.UI
             nodes[0] = node1;
             nodes[1] = node2;
             nodes[2] = node3;
-            nodes[3] = node3;
+            nodes[3] = node4;
 
             IGraphicalElement[] elements = new IGraphicalElement[1];
             elements[0] = new QuadElement(node1, node2, node3, node4);
