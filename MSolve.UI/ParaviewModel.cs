@@ -15,18 +15,21 @@ namespace MSolve.UI
     {
         private IGraphicalNode[] Nodes { get; set; }
         private IGraphicalElement[] Elements { get; set; }
+        private List<string> nodalDisplacements;
 
-        public ParaviewModel()
+        public ParaviewModel(Mesh mesh, List<string> dispVector)
         {
-            
+            Nodes = mesh.Nodes;
+            Elements = mesh.Elements;
+            nodalDisplacements = dispVector;
         }
 
            
-        public void ExportParaviewXML(string pathToSave)
+        public void ExportParaviewXML(string pathToSave, string name)
         {
             XElement messageBody = CreateXMLMessageBody(Nodes);
             XDocument document = CreateCompleteXML(messageBody);
-            document.Save(pathToSave + "geometry.vtu");
+            document.Save(pathToSave + name);
         }
 
         private XDocument CreateCompleteXML(XElement unstructuredGrid)
@@ -51,11 +54,11 @@ namespace MSolve.UI
                 stringOfNodes.Add(nodes[i].XCoordinate.ToString(new CultureInfo("en-US")) + " " + nodes[i].YCoordinate.ToString(new CultureInfo("en-US")) + " " + nodes[i].ZCoordinate.ToString(new CultureInfo("en-US")) + "\n");
             }
 
-            List<string> testString = new List<string>();
-            for (int i = 0; i < 8; i++)
-            {
-                testString.Add(stringOfNodes[i]);
-            }
+            //List<string> testString = new List<string>();
+            //for (int i = 0; i < 8; i++)
+            //{
+            //    testString.Add(stringOfNodes[i]);
+            //}
 
 
             XElement pointsDataArray = new XElement(
@@ -72,23 +75,21 @@ namespace MSolve.UI
                 string connectivityForElement="";
                 for (int j = 0; j < Elements[i].Nodes.Length; j++)
                 {
-                    connectivityForElement = connectivityForElement + Elements[i].Nodes[j].ToString();
+                    connectivityForElement = connectivityForElement + " " + Elements[i].Nodes[j].GlobalIndex.ToString();
                 }
                 connectivityForElement = connectivityForElement + "\n";
-                connectivity.Add(connectivityForElement);
-                    
+                connectivity.Add(connectivityForElement);   
             }
         
-
             int k = 0;
             List<string> offsets = new List<string>();
             for (int i = 0; i < connectivity.Count; i++)
             {
-                k = k + 8;
+                k = k + 4;
                 offsets.Add(k.ToString() + "\n");
             }
 
-            k = 12;
+            k = 9;
             List<string> types = new List<string>();
             for (int i = 0; i < connectivity.Count; i++)
             {
@@ -120,21 +121,18 @@ namespace MSolve.UI
                 ),
             };
 
-
-
-
             XElement piece = new XElement(
                 "Piece",
                 new XAttribute("NumberOfPoints", nodes.Length),
                 new XAttribute("NumberOfCells", Elements.Length),
                 new XElement("CellData"),
-                //new XElement("PointData",
-                //    new XElement("DataArray",
-                //        new XAttribute("type", "Float32"),
-                //        new XAttribute("NumberOfComponents", "3"),
-                //        new XAttribute("Name", "Displacements"),
-                //        new XAttribute("format", "ascii"),
-                //        nodalDisplacements)),
+                new XElement("PointData",
+                    new XElement("DataArray",
+                        new XAttribute("type", "Float32"),
+                        new XAttribute("NumberOfComponents", "3"),
+                        new XAttribute("Name", "Displacements"),
+                        new XAttribute("format", "ascii"),
+                        nodalDisplacements)),
                 new XElement("Points", pointsDataArray),
                 new XElement("Cells", cells)
                                 );

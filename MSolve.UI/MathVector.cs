@@ -93,7 +93,7 @@ namespace MSolve.UI
 
         public static double[] GetSumOfVectors(List<double[]> vectors)
         {
-            int lengthOfEachVector = vectors[1].Length;
+            int lengthOfEachVector = vectors[0].Length;
             double[] sumVector = new double[lengthOfEachVector];
 
             foreach (double[] vector in vectors)
