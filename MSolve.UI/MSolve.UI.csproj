@@ -16,7 +16,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -67,6 +67,7 @@
     <Compile Include="GraphicalEdgeLinear.cs" />
     <Compile Include="IGraphicalEdge.cs" />
     <Compile Include="IGraphicalElement.cs" />
+    <Compile Include="ImportAnsysMesh.cs" />
     <Compile Include="MathVector.cs" />
     <Compile Include="Mesh.cs" />
     <Compile Include="ParaviewModel.cs" />

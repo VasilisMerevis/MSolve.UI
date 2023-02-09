@@ -10,6 +10,7 @@ namespace MSolve.UI
     {
         public IGraphicalNode[] Nodes { get; set; }
         public int NumberOfNodes { get; }
+        public int ID { get; set; }
 
         public double[] UnitNormalVector { get; set; }
 
@@ -27,7 +28,19 @@ namespace MSolve.UI
             NumberOfNodes = 4;
         }
 
-        
+        public QuadElement(int id, IGraphicalNode node1, IGraphicalNode node2, IGraphicalNode node3, IGraphicalNode node4)
+        {
+            Nodes = new IGraphicalNode[4];
+            Nodes[0] = node1;
+            Nodes[1] = node2;
+            Nodes[2] = node3;
+            Nodes[3] = node4;
+
+            NumberOfNodes = 4;
+            ID = id;
+        }
+
+
         public IGraphicalNode CalculateElementCentroid()
         {
             throw new NotImplementedException();

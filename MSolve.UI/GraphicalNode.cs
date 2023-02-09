@@ -24,6 +24,7 @@ namespace MSolve.UI
             XCoordinate = xCoordinate;
             YCoordinate = yCoordinate;
             ZCoordinate = zCoordinate;
+            GlobalIndex = globalIndex;
         }
 
     }

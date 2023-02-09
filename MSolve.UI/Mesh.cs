@@ -116,7 +116,8 @@ namespace MSolve.UI
             List<double[]> finalOffsetVectors = new List<double[]>();
             foreach (var offsetVector in OffsetVectors)
             {
-                double[] newOffsetVector = MathVector.VectorScalarProduct(offsetVector, distance);
+                double normOffsetVector = MathVector.VectorNorm2(offsetVector);
+                double[] newOffsetVector = MathVector.VectorScalarProduct(offsetVector, distance/normOffsetVector);
                 finalOffsetVectors.Add(newOffsetVector);
             }
 
