@@ -65,6 +65,7 @@
     <Compile Include="DFChartValues.cs" />
     <Compile Include="GFECMesh.cs" />
     <Compile Include="GraphicalEdgeLinear.cs" />
+    <Compile Include="HexaElement.cs" />
     <Compile Include="IGraphicalEdge.cs" />
     <Compile Include="IGraphicalElement.cs" />
     <Compile Include="ImportAnsysMesh.cs" />

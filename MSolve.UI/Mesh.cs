@@ -30,6 +30,12 @@ namespace MSolve.UI
             NodesOwnerElements = new List<List<int>>();
             OffsetVectors = new List<double[]>();
         }
+
+        public Mesh(IGraphicalNode[] nodes, IGraphicalElement[] elements)
+        {
+            Nodes = nodes;
+            Elements = elements;
+        }
         public void FindOwnerElements()
         {
             for (int i = 0; i < Nodes.Length; i++)
@@ -135,6 +141,49 @@ namespace MSolve.UI
 
             offsetMesh.Nodes = GetNodesFromPosistionVectors(finalPositionVectors);
             return offsetMesh;
+        }
+
+        public Mesh CreateMergedMesh(Mesh mesh1, Mesh mesh2)
+        {
+            IGraphicalNode[] nodesForMergedMesh = CreateNodesOfMergedMeshes(mesh1.Nodes, mesh2.Nodes);
+            IGraphicalElement[] elementsForMergedMesh = CreateElementsOutOfMergedMeshes(mesh1.Elements, mesh2.Elements);
+            return new Mesh(nodesForMergedMesh, elementsForMergedMesh);
+        }
+
+        private IGraphicalNode[] CreateNodesOfMergedMeshes(IGraphicalNode[] nodes1, IGraphicalNode[] nodes2)
+        {
+            if (nodes1.Length == nodes2.Length)
+            {
+                IGraphicalNode[] newMeshNodes = new IGraphicalNode[nodes1.Length * 2];
+                for (int i = 0; i < nodes1.Length; i++)
+                {
+                    newMeshNodes[i] = nodes1[i];
+                    newMeshNodes[nodes1.Length+i] = nodes2[i];
+                }
+            }
+            else
+            {
+                throw new Exception("Not equal nodes vectors.");
+            }
+            return new IGraphicalNode[nodes1.Length * 2];
+        }
+
+        private IGraphicalElement[] CreateElementsOutOfMergedMeshes(IGraphicalElement[] elements1, IGraphicalElement[] elements2)
+        {
+            IGraphicalElement[] newElements = new IGraphicalElement[elements1.Length];
+            for (int i = 0; i < elements1.Length; i++)
+            {
+                newElements[i] = new HexaElement(
+                    elements1[i].Nodes[0],
+                    elements1[i].Nodes[1],
+                    elements1[i].Nodes[2],
+                    elements1[i].Nodes[3],
+                    elements2[i].Nodes[0],
+                    elements2[i].Nodes[1],
+                    elements2[i].Nodes[2],
+                    elements2[i].Nodes[3]);
+            }
+            return newElements;
         }
 
         //public static QuadElement[] SplitTriangleInQuads(TriangleElement triangleElement)
