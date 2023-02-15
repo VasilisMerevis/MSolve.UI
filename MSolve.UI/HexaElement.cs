@@ -20,7 +20,7 @@ namespace MSolve.UI
         public HexaElement(IGraphicalNode node1, IGraphicalNode node2, IGraphicalNode node3, IGraphicalNode node4,
             IGraphicalNode node5, IGraphicalNode node6, IGraphicalNode node7, IGraphicalNode node8)
         {
-            Nodes = new IGraphicalNode[4];
+            Nodes = new IGraphicalNode[8];
             Nodes[0] = node1;
             Nodes[1] = node2;
             Nodes[2] = node3;

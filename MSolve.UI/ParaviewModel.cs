@@ -82,14 +82,16 @@ namespace MSolve.UI
             }
         
             int k = 0;
+
+            
             List<string> offsets = new List<string>();
             for (int i = 0; i < connectivity.Count; i++)
             {
-                k = k + 4;
+                k = k + 8;
                 offsets.Add(k.ToString() + "\n");
             }
 
-            k = 9;
+            k = 12;
             List<string> types = new List<string>();
             for (int i = 0; i < connectivity.Count; i++)
             {
