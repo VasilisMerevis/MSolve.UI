@@ -448,19 +448,22 @@ namespace MSolve.UI
 
         private void ExportMeshToCSV(object sender, RoutedEventArgs e)
         {
-            //var importedMeshFromAnsys = new AnsysMesh();
-            //importedMeshFromAnsys.ImportMesh(@"C:/Users/Public/Documents/AnsysMesh");
+            var importedMeshFromAnsys = new AnsysMesh();
+            importedMeshFromAnsys.ImportMesh(@"C:/Users/Public/Documents/AnsysMesh");
 
-            //Mesh newMesh = new Mesh();
-            //newMesh.Nodes = importedMeshFromAnsys.Nodes;
-            //newMesh.Elements = importedMeshFromAnsys.Elements;
-            //Mesh offsetMesh = newMesh.CreateNewOffsetMesh(0.005);
-            //offsetMesh.Elements = newMesh.Elements;
-            //List<string> dispVector = new List<string>();
-            //for (int i = 0; i < newMesh.Nodes.Length; i++)
-            //{
-            //    dispVector.Add("0 0 0\n");
-            //}
+            Mesh newMesh = new Mesh();
+            newMesh.Nodes = importedMeshFromAnsys.Nodes;
+            newMesh.Elements = importedMeshFromAnsys.Elements;
+            Mesh offsetMesh = newMesh.CreateNewOffsetMesh(0.005);
+            offsetMesh.Elements = newMesh.Elements;
+            List<string> dispVector = new List<string>();
+            for (int i = 0; i < newMesh.Nodes.Length*2; i++)
+            {
+                dispVector.Add("0 0 0\n");
+            }
+
+            Mesh mergedMesh = new Mesh();
+            mergedMesh.CreateMergedMesh(newMesh, offsetMesh);
             //ParaviewModel exportableModel = new ParaviewModel(offsetMesh, dispVector);
             //exportableModel.ExportParaviewXML(@"C:\Users\Public\Documents\ExportedToParaview\", "geometryAnsys.vtu");
             //ParaviewModel exportableModel2 = new ParaviewModel(newMesh, dispVector);
@@ -468,57 +471,57 @@ namespace MSolve.UI
 
 
 
-            IGraphicalNode[] nodes = new IGraphicalNode[8];
-            IGraphicalNode node1 = new GraphicalNode(0.0, 1.0, 0.0);
-            IGraphicalNode node2 = new GraphicalNode(1.0, 0.0, 0.0);
-            IGraphicalNode node3 = new GraphicalNode(2.0, 0.0, 0.0);
-            IGraphicalNode node4 = new GraphicalNode(3.0, 1.0, 0.0);
+            //IGraphicalNode[] nodes = new IGraphicalNode[8];
+            //IGraphicalNode node1 = new GraphicalNode(0.0, 1.0, 0.0);
+            //IGraphicalNode node2 = new GraphicalNode(1.0, 0.0, 0.0);
+            //IGraphicalNode node3 = new GraphicalNode(2.0, 0.0, 0.0);
+            //IGraphicalNode node4 = new GraphicalNode(3.0, 1.0, 0.0);
 
-            IGraphicalNode node5 = new GraphicalNode(0.0, 1.0, 1.0);
-            IGraphicalNode node6 = new GraphicalNode(1.0, 0.0, 1.0);
-            IGraphicalNode node7 = new GraphicalNode(2.0, 0.0, 1.0);
-            IGraphicalNode node8 = new GraphicalNode(3.0, 1.0, 1.0);
+            //IGraphicalNode node5 = new GraphicalNode(0.0, 1.0, 1.0);
+            //IGraphicalNode node6 = new GraphicalNode(1.0, 0.0, 1.0);
+            //IGraphicalNode node7 = new GraphicalNode(2.0, 0.0, 1.0);
+            //IGraphicalNode node8 = new GraphicalNode(3.0, 1.0, 1.0);
 
-            nodes[0] = node1;
-            nodes[1] = node2;
-            nodes[2] = node3;
-            nodes[3] = node4;
+            //nodes[0] = node1;
+            //nodes[1] = node2;
+            //nodes[2] = node3;
+            //nodes[3] = node4;
 
-            nodes[4] = node5;
-            nodes[5] = node6;
-            nodes[6] = node7;
-            nodes[7] = node8;
+            //nodes[4] = node5;
+            //nodes[5] = node6;
+            //nodes[6] = node7;
+            //nodes[7] = node8;
 
-            nodes[0].GlobalIndex = 0;
-            nodes[1].GlobalIndex = 1;
-            nodes[2].GlobalIndex = 2;
-            nodes[3].GlobalIndex = 3;
+            //nodes[0].GlobalIndex = 0;
+            //nodes[1].GlobalIndex = 1;
+            //nodes[2].GlobalIndex = 2;
+            //nodes[3].GlobalIndex = 3;
 
-            nodes[4].GlobalIndex = 4;
-            nodes[5].GlobalIndex = 5;
-            nodes[6].GlobalIndex = 6;
-            nodes[7].GlobalIndex = 7;
+            //nodes[4].GlobalIndex = 4;
+            //nodes[5].GlobalIndex = 5;
+            //nodes[6].GlobalIndex = 6;
+            //nodes[7].GlobalIndex = 7;
 
-            IGraphicalElement[] elements = new IGraphicalElement[3];
-            elements[0] = new QuadElement(nodes[0], nodes[1], nodes[5], nodes[4]);
-            elements[1] = new QuadElement(nodes[1], nodes[2], nodes[6], nodes[5]);
-            elements[2] = new QuadElement(nodes[2], nodes[3], nodes[7], nodes[6]);
+            //IGraphicalElement[] elements = new IGraphicalElement[3];
+            //elements[0] = new QuadElement(nodes[0], nodes[1], nodes[5], nodes[4]);
+            //elements[1] = new QuadElement(nodes[1], nodes[2], nodes[6], nodes[5]);
+            //elements[2] = new QuadElement(nodes[2], nodes[3], nodes[7], nodes[6]);
 
-            Mesh newMesh = new Mesh();
-            newMesh.Nodes = nodes;
-            newMesh.Elements = elements;
+            //Mesh newMesh = new Mesh();
+            //newMesh.Nodes = nodes;
+            //newMesh.Elements = elements;
 
-            Mesh offsetMesh = newMesh.CreateNewOffsetMesh(1.0);
-            offsetMesh.Elements = newMesh.Elements;
+            //Mesh offsetMesh = newMesh.CreateNewOffsetMesh(1.0);
+            //offsetMesh.Elements = newMesh.Elements;
 
-            Mesh mergedMesh = new Mesh();
-            mergedMesh.CreateMergedMesh(newMesh, offsetMesh);
+            //Mesh mergedMesh = new Mesh();
+            //mergedMesh.CreateMergedMesh(newMesh, offsetMesh);
 
-            List<string> dispVector = new List<string>();
-            for (int i = 0; i < mergedMesh.Nodes.Length; i++)
-            {
-                dispVector.Add("0 0 0\n");
-            }
+            //List<string> dispVector = new List<string>();
+            //for (int i = 0; i < mergedMesh.Nodes.Length; i++)
+            //{
+            //    dispVector.Add("0 0 0\n");
+            //}
             ParaviewModel exportableModel = new ParaviewModel(mergedMesh, dispVector);
             exportableModel.ExportParaviewXML(@"C:\Users\Public\Documents\ExportedToParaview\", "exportedSimpleExample.vtu");
         }

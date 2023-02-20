@@ -71,6 +71,7 @@
     <Compile Include="ImportAnsysMesh.cs" />
     <Compile Include="MathVector.cs" />
     <Compile Include="Mesh.cs" />
+    <Compile Include="MSolveModel.cs" />
     <Compile Include="ParaviewModel.cs" />
     <Compile Include="QuadElement.cs" />
     <Compile Include="RandomChartValues.cs" />
