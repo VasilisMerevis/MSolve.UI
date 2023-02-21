@@ -524,6 +524,9 @@ namespace MSolve.UI
             //}
             ParaviewModel exportableModel = new ParaviewModel(mergedMesh, dispVector);
             exportableModel.ExportParaviewXML(@"C:\Users\Public\Documents\ExportedToParaview\", "exportedSimpleExample.vtu");
+
+            MSolveModel exportedMsolveModel = new MSolveModel(mergedMesh.Nodes, mergedMesh.Elements);
+            exportedMsolveModel.ExportToTXT(@"C:\Users\Public\Documents\ExportedToParaview\", "exportedForMsolve");
         }
 
     }

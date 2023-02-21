@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -30,9 +31,9 @@ namespace MSolve.UI
             string[] strings = new string[Nodes.Length];
             for (int i = 0; i < Nodes.Length; i++)
             {
-                strings[i] = Nodes[i].XCoordinate.ToString() + "\t" + Nodes[i].YCoordinate.ToString() + "\t" + Nodes[i].ZCoordinate.ToString();
+                strings[i] = Nodes[i].XCoordinate.ToString(CultureInfo.InvariantCulture) + "\t" + Nodes[i].YCoordinate.ToString(CultureInfo.InvariantCulture) + "\t" + Nodes[i].ZCoordinate.ToString(CultureInfo.InvariantCulture);
             }
-            File.WriteAllLines(path+filename, strings);
+            File.WriteAllLines(path+filename+"nodes.txt", strings);
         }
 
         private void ExportConnectivityToTXT(string path, string filename)
@@ -46,7 +47,7 @@ namespace MSolve.UI
                     strings[i] = strings[i] + Elements[i].Nodes[j].GlobalIndex.ToString() + "\t";
                 }
             }
-            File.WriteAllLines (path+filename, strings);
+            File.WriteAllLines (path+filename+"connectivity.txt", strings);
         }
     }
 }
