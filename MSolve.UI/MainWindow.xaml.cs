@@ -529,6 +529,28 @@ namespace MSolve.UI
             exportedMsolveModel.ExportToTXT(@"C:\Users\Public\Documents\ExportedToParaview\", "exportedForMsolve");
         }
 
+		private void Button_Convert(object sender, RoutedEventArgs e)
+		{
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.Multiselect = true;
+            fileDialog.ShowDialog();
+            List<string> files = new List<string>(fileDialog.FileNames);
+            var folderPath = System.IO.Path.GetDirectoryName(files[0]);
+            var dir = folderPath + @"\Converted";
+
+			if (!Directory.Exists(dir)) // if it doesn't exist, create
+				Directory.CreateDirectory(dir);
+
+			foreach (string s in files)
+            {
+				var fileName = System.IO.Path.GetFileName(s);
+				string[] importedFile = File.ReadAllLines(s);
+                List<string> convertedFile = new List<string>(importedFile[0].Split(new char[] { ' ' }));
+                convertedFile.RemoveAll(string.IsNullOrEmpty);
+                File.WriteAllLines(System.IO.Path.Combine(dir, fileName), convertedFile);
+			}
+            LogTool.Text = "Conversion operation completed!";
+        }
     }
 
     
