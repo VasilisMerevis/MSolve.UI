@@ -16,65 +16,75 @@ namespace MSolve.UI
         public Dictionary<int, Dictionary<int, int>> elementsConnectivity = new Dictionary<int, Dictionary<int, int>>();
         //public Dictionary<int, IGraphicalNode> nodalDisplacements = new Dictionary<int, IGraphicalNode>();
         private string gfecFileName;
-        private int gfecTotalFiles;
+        //private int gfecTotalFiles;
         private string pathExport;
         private string filenameExport;
         List<Dictionary<int, IGraphicalNode>> allTimeStepsDisp = new List<Dictionary<int, IGraphicalNode>>();
-        public double ScaleFactor { get; set; }
+
+		public double ScaleFactor { get; set; }
         List<string> nodalDisplacements;
 
         public GFECMesh()
         {
             gfecFileName = "paraviewDataStep3";
-            gfecTotalFiles = 60;
+            //gfecTotalFiles = 60;
             pathExport = "C:/Users/Public/Documents/TEST/";
             filenameExport = "paraviewDataStep";
             ScaleFactor = 0.0;
             nodalDisplacements = new List<string>();
         }
 
-        public void ReadData()
+        public string ReadData()
         {
-            //OpenFileDialog dialog1 = new OpenFileDialog();
-            //dialog1.ShowDialog();
-            //string selectedFilePath = dialog1.FileName;
-
             ReadCoordinateData();
             ReadConnectivityData();
-            for (int i = 0; i < gfecTotalFiles; i++)
-            {
-                allTimeStepsDisp.Add(ReadDynamicResults(i));
-            }
+            ReadAllDynamicResults();
+            return "Data import was successfull";
         }
 
         private void ReadCoordinateData()
         {
-            string coordinateFilePath = "C:/Users/Public/Documents/Initial/MSolve_Results_Regale/coordinateData.dat";
+			OpenFileDialog coordFileDialog = new OpenFileDialog();
+			coordFileDialog.Title = "Select Initial Coordinates File";
+			coordFileDialog.ShowDialog();
+			string coordinateFilePath = coordFileDialog.FileName;
+			//coordinateFilePath = "C:/Users/Public/Documents/Initial/MSolve_Results_Regale/coordinateData.dat";
             List<string> alllinesCoordinates = new List<string>(File.ReadAllLines(coordinateFilePath));
+            int nodeID = 1;
             foreach (var line in alllinesCoordinates)
             {
                 string separator = "\t";
                 string[] fields = line.Split(separator.ToCharArray());
 
-                int nodeID = int.Parse(fields[0]);
-                var node = new GraphicalNode(double.Parse(fields[1], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[2], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")), double.Parse(fields[3], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")));
+                
+                var node = new GraphicalNode(
+                    nodeID,
+                    double.Parse(fields[0], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")),
+                    double.Parse(fields[1], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")),
+                    double.Parse(fields[2], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")));
                 initialNodes.Add(nodeID, node);
-            }
+				nodeID++;
+			}
         }
 
         private void ReadConnectivityData()
         {
-            string conectivityFilePath = "C:/Users/Public/Documents/Initial/MSolve_Results_Regale/connectivityData.dat";
+			OpenFileDialog connectFileDialog = new OpenFileDialog();
+			connectFileDialog.Title = "Select Connectivity File";
+			connectFileDialog.ShowDialog();
+			string conectivityFilePath = connectFileDialog.FileName;
+			//conectivityFilePath = "C:/Users/Public/Documents/Initial/MSolve_Results_Regale/connectivityData.dat";
             List<string> alllinesConnectivity = new List<string>(File.ReadAllLines(conectivityFilePath));
-            foreach (var line in alllinesConnectivity)
+            int elementID = 1;
+			foreach (var line in alllinesConnectivity)
             {
                 string separator = "\t";
                 string[] fields = line.Split(separator.ToCharArray());
 
-                int elementID = int.Parse(fields[0]);
+                
                 var elementNodes = new List<int>();
 
-                for (int i = 1; i < fields.Length; i++)
+                for (int i = 0; i < fields.Length; i++)
                 {
                     elementNodes.Add(int.Parse(fields[i]) - 1);
                 }
@@ -90,14 +100,15 @@ namespace MSolve.UI
                     { 7, elementNodes[6] },
                     { 8, elementNodes[7] }
                 };
+                elementID++;
             }
         }
 
-        private Dictionary<int, IGraphicalNode> ReadDynamicResults(int timestep)
+        private Dictionary<int, IGraphicalNode> ReadDynamicResults(string dynamicResults)
         {
             Dictionary<int, IGraphicalNode> nodalDisplacements = new Dictionary<int, IGraphicalNode>();
-            string dynamicResults1 = "C:/Users/Public/Documents/Initial/MSolve_Results_Regale/Regale Full Solution Vectors/RegaleSolution"+timestep.ToString()+".txt";
-            List<string> alllinesDynamicResults = new List<string>(File.ReadAllLines(dynamicResults1));
+            //string dynamicResults1 = "C:/Users/Public/Documents/Initial/MSolve_Results_Regale/Regale Full Solution Vectors/RegaleSolution"+timestep.ToString()+".txt";
+            List<string> alllinesDynamicResults = new List<string>(File.ReadAllLines(dynamicResults));
             int k = 1;
             for (int i = 0; i <= alllinesDynamicResults.Count - 3; i += 3)
             {
@@ -109,6 +120,26 @@ namespace MSolve.UI
             }
             return nodalDisplacements;
         }
+
+        private void ReadAllDynamicResults()
+        {
+			OpenFileDialog fileDialog = new OpenFileDialog();
+			fileDialog.Multiselect = true;
+			fileDialog.ShowDialog();
+			List<string> files = new List<string>(fileDialog.FileNames);
+			var folderPath = System.IO.Path.GetDirectoryName(files[0]);
+
+            foreach (var file in files)
+            {
+				allTimeStepsDisp.Add(ReadDynamicResults(file));
+			}
+			//for (int i = 0; i < gfecTotalFiles; i++)
+			//{
+			//	allTimeStepsDisp.Add(ReadDynamicResults(i));
+			//}
+
+
+		}
 
         
         private void UpdateNodalPositions(Dictionary<int, IGraphicalNode> nodes, int timestep)
@@ -139,7 +170,7 @@ namespace MSolve.UI
             XDocument document = CreateCompleteXML(messageBody);
             document.Save(pathExport + filenameExport+"-1");
 
-            for (int i = 0; i < gfecTotalFiles; i++)
+            for (int i = 0; i < allTimeStepsDisp.Count; i++)
             {
                 if (ScaleFactor != 0)
                 {
@@ -276,7 +307,7 @@ namespace MSolve.UI
         private void CreatePVDFile()
         {
             List<XElement> timesteps = new List<XElement>();
-            for (int i = 0; i < gfecTotalFiles; i++)
+            for (int i = 0; i < allTimeStepsDisp.Count; i++)
             {
                 timesteps.Add(
                     new XElement(

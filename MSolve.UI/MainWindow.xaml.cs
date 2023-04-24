@@ -437,8 +437,9 @@ namespace MSolve.UI
         private void Import_GFEC_Results(object sender, RoutedEventArgs e)
         {
             mesh = new GFECMesh();
-            mesh.ReadData();
-        }
+            string result = mesh.ReadData();
+			LogTool.Text = "Importing operation completed!";
+		}
 
         private void ExportParaviewModel(object sender, RoutedEventArgs e)
         {
