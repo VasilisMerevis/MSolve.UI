@@ -63,7 +63,7 @@ namespace MSolve.UI
                     // in case of first line
                     string[] fields = line.Split(new string[] { "\t" }, StringSplitOptions.None);
                     int elementIndex = int.Parse(fields[0]);
-
+                    List<int> nodes = new List<int>();
                     switch (fields[1].ToString())
                     {
                         case "Quad4":
@@ -73,7 +73,24 @@ namespace MSolve.UI
                             int node4 = int.Parse(fields[5]) - 1;
                             Elements[k] = new QuadElement(elementIndex, Nodes[node1], Nodes[node2], Nodes[node3], Nodes[node4]);
                             break;
-                    }
+						case "Quad8":
+                            for (int i = 2; i < fields.Length-1; i++)
+                            {
+                                nodes.Add(int.Parse(fields[i]) - 1);
+                            }
+							Elements[k] = new HexaElement(elementIndex, Nodes[nodes[0]], Nodes[nodes[1]], Nodes[nodes[2]], Nodes[nodes[3]],
+                                Nodes[nodes[4]], Nodes[nodes[5]], Nodes[nodes[6]], Nodes[nodes[7]]);
+							break;
+						case "Tri6":
+							for (int i = 2; i < fields.Length-1; i++)
+							{
+
+								nodes.Add(int.Parse(fields[i]) - 1);
+							}
+							Elements[k] = new WedgeElement(elementIndex, Nodes[nodes[0]], Nodes[nodes[1]], Nodes[nodes[2]], Nodes[nodes[3]],
+								Nodes[nodes[4]], Nodes[nodes[5]]);
+							break;
+					}
                     k++;
                 }
                 

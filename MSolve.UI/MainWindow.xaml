@@ -63,7 +63,7 @@
                 <Button Grid.Column="0" Content="Plot Results" Margin="0,0,5,0" VerticalAlignment="Stretch" Click="PlotResultsClick" HorizontalAlignment="Stretch"/>
                 <Button Grid.Column="1" Content="Export Paraview" Margin="5,0,5,0" VerticalAlignment="Stretch"  Click="ExportParaviewModel" HorizontalAlignment="Stretch"/>
                 <Button Grid.Column="2" Content="Export Results" Margin="5,0,5,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" />
-                <Button Grid.Column="3" Content="Clear Data" Margin="5,0,0,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" />
+                <Button Grid.Column="3" Content="Import Ansys" Margin="5,0,0,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Click="ImportAnsysClick"/>
                 <Button Grid.Column="4" Content="Export Offset Mesh" Margin="5,0,0,0" VerticalAlignment="Stretch"  HorizontalAlignment="Stretch" Click="ExportMeshToCSV"/>
             </Grid>
             <Grid Grid.Row="7" Margin="0,10,0,30" VerticalAlignment="Stretch" >

@@ -552,6 +552,12 @@ namespace MSolve.UI
 			}
             LogTool.Text = "Conversion operation completed!";
         }
+
+		private void ImportAnsysClick(object sender, RoutedEventArgs e)
+		{
+			var importedMeshFromAnsys = new AnsysMesh();
+			importedMeshFromAnsys.ImportMesh(@"C:\Users\vasil\Downloads\AnsysNewResultsForVideo");
+		}
     }
 
     
