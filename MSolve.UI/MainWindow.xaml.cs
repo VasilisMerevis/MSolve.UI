@@ -557,6 +557,8 @@ namespace MSolve.UI
 		{
 			var importedMeshFromAnsys = new AnsysMesh();
 			importedMeshFromAnsys.ImportMesh(@"C:\Users\vasil\Downloads\AnsysNewResultsForVideo");
+			importedMeshFromAnsys.ExportParaviewXML("C:/Users/Public/Documents/AnsysVideo/paraviewData.vtu");
+			LogTool.Text = "Operation completed!";
 		}
     }
 

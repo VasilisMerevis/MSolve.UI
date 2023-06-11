@@ -39,7 +39,25 @@ namespace MSolve.UI
             ReadCoordinateData();
             ReadConnectivityData();
             ReadAllDynamicResults();
+            CheckAndFixNodesAndDisplacementArraysLength();
             return "Data import was successfull";
+        }
+
+        private void CheckAndFixNodesAndDisplacementArraysLength()
+        {
+            int nodesLength = initialNodes.Count;
+            int displacementsLength = allTimeStepsDisp.Last().Count;
+
+            if (nodesLength < displacementsLength)
+            {
+                foreach (var timestepResults in allTimeStepsDisp)
+                {
+                    for (int i = nodesLength+1; i <= displacementsLength; i++)
+                    {
+                        timestepResults.Remove(i);
+                    }
+                }
+            }
         }
 
         private void ReadCoordinateData()
@@ -59,9 +77,9 @@ namespace MSolve.UI
                 
                 var node = new GraphicalNode(
                     nodeID,
-                    double.Parse(fields[0], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")),
                     double.Parse(fields[1], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")),
-                    double.Parse(fields[2], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")));
+                    double.Parse(fields[2], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")),
+                    double.Parse(fields[3], System.Globalization.NumberStyles.Float, CultureInfo.GetCultureInfo("en-US")));
                 initialNodes.Add(nodeID, node);
 				nodeID++;
 			}
@@ -84,7 +102,7 @@ namespace MSolve.UI
                 
                 var elementNodes = new List<int>();
 
-                for (int i = 0; i < fields.Length; i++)
+                for (int i = 1; i < fields.Length; i++)
                 {
                     elementNodes.Add(int.Parse(fields[i]) - 1);
                 }
@@ -124,7 +142,8 @@ namespace MSolve.UI
         private void ReadAllDynamicResults()
         {
 			OpenFileDialog fileDialog = new OpenFileDialog();
-			fileDialog.Multiselect = true;
+            fileDialog.Title = "Select Dynamic Results Files";
+            fileDialog.Multiselect = true;
 			fileDialog.ShowDialog();
 			List<string> files = new List<string>(fileDialog.FileNames);
 			var folderPath = System.IO.Path.GetDirectoryName(files[0]);
